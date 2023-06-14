@@ -65,7 +65,16 @@ const likeCard = (req, res) => {
           .send({ message: 'The requested information was not found' });
       } return res.status(statusCodeOK).send(updateCard);
     })
-    .catch(() => res.status(statusCodeServerError).send({ message: 'Server error' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(statusCodeBadRequest)
+          .send({ message: 'Incorrect data was transmitted' });
+      }
+      return res
+        .status(statusCodeServerError)
+        .send({ message: 'Server error' });
+    });
 };
 
 const unlikeCard = (req, res) => {
@@ -81,7 +90,16 @@ const unlikeCard = (req, res) => {
           .send({ message: 'The requested information was not found' });
       } return res.status(statusCodeOK).send(updateCard);
     })
-    .catch(() => res.status(statusCodeServerError).send({ message: 'Server error' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(statusCodeBadRequest)
+          .send({ message: 'Incorrect data was transmitted' });
+      }
+      return res
+        .status(statusCodeServerError)
+        .send({ message: 'Server error' });
+    });
 };
 
 module.exports = {
