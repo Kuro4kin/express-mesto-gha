@@ -16,12 +16,18 @@ const getUsers = (req, res) => User.find({})
 const getUserById = (req, res) => {
   const { userId } = req.params;
   return User.findById(userId)
-    .then((user) => res.status(statusCodeOK).send(user))
-    .catch((err) => {
-      if (err.name === 'CastError') {
+    .then((user) => {
+      if (!user) {
         return res
           .status(statusCodeNotFound)
           .send({ message: 'The requested information was not found' });
+      } return res.status(statusCodeOK).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(statusCodeBadRequest)
+          .send({ message: 'Incorrect data was transmitted' });
       }
       return res
         .status(statusCodeServerError)

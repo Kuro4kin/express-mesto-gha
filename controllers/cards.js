@@ -18,7 +18,6 @@ const createCard = (req, res) => {
   const newCardData = req.body;
   Card.create(newCardData)
     .then((newCard) => res.status(statusCodeCreate).send(newCard))
-
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
@@ -34,14 +33,18 @@ const createCard = (req, res) => {
 const removeCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndDelete(cardId)
-    .then(() => {
-      res.status(statusCodeOK).send({ message: 'done' });
+    .then((card) => {
+      if (!card) {
+        return res
+          .status(statusCodeNotFound)
+          .send({ message: 'The requested information was not found' });
+      } return res.status(statusCodeOK).send({ message: 'done' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(statusCodeNotFound)
-          .send({ message: 'The requested information was not found' });
+          .status(statusCodeBadRequest)
+          .send({ message: 'Incorrect data was transmitted' });
       }
       return res
         .status(statusCodeServerError)
@@ -55,7 +58,13 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then((updateCard) => res.status(statusCodeOK).send(updateCard))
+    .then((updateCard) => {
+      if (!updateCard) {
+        return res
+          .status(statusCodeNotFound)
+          .send({ message: 'The requested information was not found' });
+      } return res.status(statusCodeOK).send(updateCard);
+    })
     .catch(() => res.status(statusCodeServerError).send({ message: 'Server error' }));
 };
 
@@ -65,7 +74,13 @@ const unlikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then((updateCard) => res.status(statusCodeOK).send(updateCard))
+    .then((updateCard) => {
+      if (!updateCard) {
+        return res
+          .status(statusCodeNotFound)
+          .send({ message: 'The requested information was not found' });
+      } return res.status(statusCodeOK).send(updateCard);
+    })
     .catch(() => res.status(statusCodeServerError).send({ message: 'Server error' }));
 };
 
