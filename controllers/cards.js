@@ -1,4 +1,3 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 const httpConstants = require('http2').constants;
 const Card = require('../models/card');
 
@@ -28,7 +27,7 @@ const removeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(httpConstants.HTTP_STATUS_BAD_REQUEST).send({ message: 'The requested information was not found' });
+        return res.status(httpConstants.HTTP_STATUS_NOT_FOUND).send({ message: 'The requested information was not found' });
       }
       return res.status(httpConstants.HTTP_STATUS_SERVER_ERROR).send({ message: 'Server error' });
     });

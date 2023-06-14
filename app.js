@@ -1,4 +1,3 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -6,7 +5,7 @@ const bodyParser = require('body-parser');
 const routes = require('./routes');
 
 const app = express();
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 
 mongoose
   .connect('mongodb://127.0.0.1:27017/mestodb', {

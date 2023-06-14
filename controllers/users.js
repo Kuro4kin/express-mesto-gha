@@ -1,4 +1,3 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_id"] }] */
 const httpConstants = require('http').constants;
 const User = require('../models/user');
 
@@ -13,7 +12,7 @@ const getUserById = (req, res) => {
   return User.findById(userId).then((user) => {
     if (!user) {
       return res
-        .status(httpConstants.HTTP_STATUS_BAD_REQUEST)
+        .status(httpConstants.HTTP_STATUS_NOT_FOUND)
         .send({ message: 'The requested information was not found' });
     }
     return res.status(httpConstants.HTTP_STATUS_OK).send(user);
@@ -43,7 +42,7 @@ const updateUserInfo = (req, res) => {
     .then((updateUser) => {
       if (!updateUser) {
         return res
-          .status(httpConstants.HTTP_STATUS_BAD_REQUEST)
+          .status(httpConstants.HTTP_STATUS_NOT_FOUND)
           .send({ message: 'The requested information was not found' });
       }
       return res.status(httpConstants.HTTP_STATUS_OK).send(updateUser);
@@ -68,7 +67,7 @@ const updateUserAvatar = (req, res) => {
     .then((updateUser) => {
       if (!updateUser) {
         return res
-          .status(httpConstants.HTTP_STATUS_BAD_REQUEST)
+          .status(httpConstants.HTTP_STATUS_NOT_FOUND)
           .send({ message: 'The requested information was not found' });
       }
       return res.status(httpConstants.HTTP_STATUS_OK).send(updateUser);
