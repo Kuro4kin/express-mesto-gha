@@ -44,16 +44,8 @@ const createUser = (req, res) => {
 const updateUserInfo = (req, res) => {
   const id = req.user._id;
   const newUserInfo = req.body;
-  return User.findByIdAndUpdate(id, newUserInfo, { new: true })
-    .then((updateUser) => {
-      if (!updateUser) {
-        return res
-          .status(statusCodeNotFound)
-          .send({ message: 'The requested information was not found' });
-      }
-      return res.status(statusCodeOK).send(updateUser);
-    })
-
+  return User.findByIdAndUpdate(id, newUserInfo, { new: true, runValidators: true })
+    .then((updateUser) => res.status(statusCodeOK).send(updateUser))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
