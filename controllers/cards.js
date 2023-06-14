@@ -1,21 +1,33 @@
-const httpConstants = require('http2').constants;
 const Card = require('../models/card');
+const {
+  statusCodeOK,
+  statusCodeCreate,
+  statusCodeBadRequest,
+  statusCodeNotFound,
+  statusCodeServerError,
+} = require('../constants/statusCodeConstatns');
 
 const getCards = (req, res) => {
-  Card.find({}).then((cards) => res.status(httpConstants.HTTP_STATUS_OK).send(cards));
+  Card.find({})
+    .then((cards) => res.status(statusCodeOK).send(cards))
+    .catch(() => res.status(statusCodeServerError).send({ message: 'Server error' }));
 };
 
 const createCard = (req, res) => {
   req.body.owner = req.user._id;
   const newCardData = req.body;
   Card.create(newCardData)
-    .then((newCard) => res.status(httpConstants.HTTP_STATUS_CREATED).send(newCard))
+    .then((newCard) => res.status(statusCodeCreate).send(newCard))
 
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(httpConstants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Incorrect data was transmitted' });
+        return res
+          .status(statusCodeBadRequest)
+          .send({ message: 'Incorrect data was transmitted' });
       }
-      return res.status(httpConstants.HTTP_STATUS_SERVER_ERROR).send({ message: 'Server error' });
+      return res
+        .status(statusCodeServerError)
+        .send({ message: 'Server error' });
     });
 };
 
@@ -23,13 +35,17 @@ const removeCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndDelete(cardId)
     .then(() => {
-      res.status(httpConstants.HTTP_STATUS_OK).send({ message: 'done' });
+      res.status(statusCodeOK).send({ message: 'done' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(httpConstants.HTTP_STATUS_NOT_FOUND).send({ message: 'The requested information was not found' });
+        return res
+          .status(statusCodeNotFound)
+          .send({ message: 'The requested information was not found' });
       }
-      return res.status(httpConstants.HTTP_STATUS_SERVER_ERROR).send({ message: 'Server error' });
+      return res
+        .status(statusCodeServerError)
+        .send({ message: 'Server error' });
     });
 };
 
@@ -39,8 +55,8 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then((updateCard) => res.status(httpConstants.HTTP_STATUS_OK).send(updateCard))
-    .catch(() => res.status(httpConstants.HTTP_STATUS_SERVER_ERROR).send({ message: 'Server error' }));
+    .then((updateCard) => res.status(statusCodeOK).send(updateCard))
+    .catch(() => res.status(statusCodeServerError).send({ message: 'Server error' }));
 };
 
 const unlikeCard = (req, res) => {
@@ -49,8 +65,8 @@ const unlikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then((updateCard) => res.status(httpConstants.HTTP_STATUS_OK).send(updateCard))
-    .catch(() => res.status(httpConstants.HTTP_STATUS_SERVER_ERROR).send({ message: 'Server error' }));
+    .then((updateCard) => res.status(statusCodeOK).send(updateCard))
+    .catch(() => res.status(statusCodeServerError).send({ message: 'Server error' }));
 };
 
 module.exports = {

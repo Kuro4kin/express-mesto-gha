@@ -1,10 +1,16 @@
-const httpConstants = require('http').constants;
 const User = require('../models/user');
+const {
+  statusCodeOK,
+  statusCodeCreate,
+  statusCodeBadRequest,
+  statusCodeNotFound,
+  statusCodeServerError,
+} = require('../constants/statusCodeConstatns');
 
 const getUsers = (req, res) => User.find({})
-  .then((users) => res.status(httpConstants.HTTP_STATUS_OK).send(users))
+  .then((users) => res.status(statusCodeOK).send(users))
   .catch(() => res
-    .status(httpConstants.HTTP_STATUS_SERVER_ERROR)
+    .status(statusCodeServerError)
     .send({ message: 'Server error' }));
 
 const getUserById = (req, res) => {
@@ -12,25 +18,25 @@ const getUserById = (req, res) => {
   return User.findById(userId).then((user) => {
     if (!user) {
       return res
-        .status(httpConstants.HTTP_STATUS_NOT_FOUND)
+        .status(statusCodeNotFound)
         .send({ message: 'The requested information was not found' });
     }
-    return res.status(httpConstants.HTTP_STATUS_OK).send(user);
+    return res.status(statusCodeOK).send(user);
   });
 };
 
 const createUser = (req, res) => {
   const newUserData = req.body;
   return User.create(newUserData)
-    .then((newUser) => res.status(httpConstants.HTTP_STATUS_CREATED).send(newUser))
+    .then((newUser) => res.status(statusCodeCreate).send(newUser))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(httpConstants.HTTP_STATUS_BAD_REQUEST)
+          .status(statusCodeBadRequest)
           .send({ message: 'Incorrect data was transmitted' });
       }
       return res
-        .status(httpConstants.HTTP_STATUS_SERVER_ERROR)
+        .status(statusCodeServerError)
         .send({ message: 'Server error' });
     });
 };
@@ -42,20 +48,20 @@ const updateUserInfo = (req, res) => {
     .then((updateUser) => {
       if (!updateUser) {
         return res
-          .status(httpConstants.HTTP_STATUS_NOT_FOUND)
+          .status(statusCodeNotFound)
           .send({ message: 'The requested information was not found' });
       }
-      return res.status(httpConstants.HTTP_STATUS_OK).send(updateUser);
+      return res.status(statusCodeOK).send(updateUser);
     })
 
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(httpConstants.HTTP_STATUS_BAD_REQUEST)
+          .status(statusCodeBadRequest)
           .send({ message: 'Incorrect data was transmitted' });
       }
       return res
-        .status(httpConstants.HTTP_STATUS_SERVER_ERROR)
+        .status(statusCodeServerError)
         .send({ message: 'Server error' });
     });
 };
@@ -67,20 +73,20 @@ const updateUserAvatar = (req, res) => {
     .then((updateUser) => {
       if (!updateUser) {
         return res
-          .status(httpConstants.HTTP_STATUS_NOT_FOUND)
+          .status(statusCodeNotFound)
           .send({ message: 'The requested information was not found' });
       }
-      return res.status(httpConstants.HTTP_STATUS_OK).send(updateUser);
+      return res.status(statusCodeOK).send(updateUser);
     })
 
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res
-          .status(httpConstants.HTTP_STATUS_BAD_REQUEST)
+          .status(statusCodeBadRequest)
           .send({ message: 'Incorrect data was transmitted' });
       }
       return res
-        .status(httpConstants.HTTP_STATUS_SERVER_ERROR)
+        .status(statusCodeServerError)
         .send({ message: 'Server error' });
     });
 };
