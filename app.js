@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
+const cookieParser = require('cookie-parser');
+const errorHandler = require('./middlewares/error-handler');
 const routes = require('./routes');
 
 const app = express();
@@ -13,16 +14,9 @@ mongoose
   });
 
 app.use(bodyParser.json());
-
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6488055044812463d16a48a0',
-  };
-  next();
-});
-
+app.use(cookieParser());
 app.use('/', routes);
-
+app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
