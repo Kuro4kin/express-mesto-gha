@@ -146,7 +146,7 @@ const login = (req, res, next) => {
           res
             .status(statusCodeOK)
             .cookie('jwt', token, { maxAge: 3600000 * 7 * 24, httpOnly: true })
-            .end();
+            .send({ message: 'Authorization completed' });
         });
     });
 };

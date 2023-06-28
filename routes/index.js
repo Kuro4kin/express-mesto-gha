@@ -5,6 +5,7 @@ const userRoutes = require('./users');
 const cardRoutes = require('./cards');
 const { login, createUser } = require('../controllers/users');
 const NotFoundError = require('../errors/not-found-error');
+const errorHandler = require('../middlewares/error-handler');
 
 router.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -29,6 +30,7 @@ router.use('*', (req, res, next) => {
   const err = new NotFoundError('The requested information was not found');
   next(err);
 });
+router.use(errorHandler);
 router.use(errors());
 
 module.exports = router;
