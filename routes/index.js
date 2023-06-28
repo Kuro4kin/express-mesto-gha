@@ -30,7 +30,7 @@ router.use('*', (req, res, next) => {
   const err = new NotFoundError('The requested information was not found');
   next(err);
 });
-router.use(errorHandler);
 router.use(errors());
+router.use(errorHandler);
 
 module.exports = router;
