@@ -1,19 +1,19 @@
-const statusCodeOK = 200;
-const statusCodeCreate = 201;
-const statusCodeBadRequest = 400;
-const statusCodeUnauthorized = 401;
-const statusCodeForbidden = 403;
-const statusCodeNotFound = 404;
-const statusCodeConflict = 409;
-const statusCodeServerError = 500;
+const HTTP_STATUS_OK = 200;
+const HTTP_STATUS_CREATED = 201;
+const HTTP_STATUS_BAD_REQUEST = 400;
+const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_FORBIDDEN = 403;
+const HTTP_STATUS_NOT_FOUND = 404;
+const HTTP_STATUS_CONFLICT = 409;
+const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
 module.exports = {
-  statusCodeOK,
-  statusCodeCreate,
-  statusCodeBadRequest,
-  statusCodeUnauthorized,
-  statusCodeForbidden,
-  statusCodeNotFound,
-  statusCodeConflict,
-  statusCodeServerError,
+  HTTP_STATUS_OK,
+  HTTP_STATUS_CREATED,
+  HTTP_STATUS_BAD_REQUEST,
+  HTTP_STATUS_UNAUTHORIZED,
+  HTTP_STATUS_FORBIDDEN,
+  HTTP_STATUS_NOT_FOUND,
+  HTTP_STATUS_CONFLICT,
+  HTTP_STATUS_INTERNAL_SERVER_ERROR,
 };

@@ -6,6 +6,7 @@ const auth = (req, res, next) => {
   if (!token) {
     const err = new UnauthorizedError('Authorization required');
     next(err);
+    return;
   }
   let payload;
   try {
@@ -13,6 +14,7 @@ const auth = (req, res, next) => {
   } catch (e) {
     const err = new UnauthorizedError('Authorization required');
     next(err);
+    return;
   }
   req.user = payload;
   next();

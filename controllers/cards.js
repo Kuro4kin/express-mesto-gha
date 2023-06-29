@@ -1,19 +1,17 @@
 const Card = require('../models/card');
 const BadRequestError = require('../errors/bad-request-error');
 const NotFoundError = require('../errors/not-found-error');
-const ServerError = require('../errors/server-error');
 const ForbiddenError = require('../errors/forbidden-error');
 const {
-  statusCodeOK,
-  statusCodeCreate,
+  HTTP_STATUS_OK,
+  HTTP_STATUS_CREATED,
 } = require('../constants/statusCodeConstatns');
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(statusCodeOK).send(cards))
-    .catch(() => {
-      const err = new ServerError('Server Error');
-      next(err);
+    .then((cards) => res.status(HTTP_STATUS_OK).send(cards))
+    .catch((e) => {
+      next(e);
     });
 };
 
@@ -21,14 +19,13 @@ const createCard = (req, res, next) => {
   req.body.owner = req.user._id;
   const newCardData = req.body;
   Card.create(newCardData)
-    .then((newCard) => res.status(statusCodeCreate).send(newCard))
+    .then((newCard) => res.status(HTTP_STATUS_CREATED).send(newCard))
     .catch((e) => {
       if (e.name === 'ValidationError') {
         const err = new BadRequestError('Incorrect data was transmitted');
         next(err);
       }
-      const err = new ServerError('Server Error');
-      next(err);
+      next(e);
     });
 };
 
@@ -47,15 +44,17 @@ const removeCard = (req, res, next) => {
         return;
       }
       Card.findByIdAndDelete(cardId)
-        .then(() => res.status(statusCodeOK).send({ message: 'done' }))
+        .then(() => res.status(HTTP_STATUS_OK).send({ message: 'done' }))
         .catch((e) => {
-          if (e.name === 'CastError') {
-            const err = new BadRequestError('Incorrect data was transmitted');
-            next(err);
-          }
-          const err = new ServerError('Server Error');
-          next(err);
+          next(e);
         });
+    })
+    .catch((e) => {
+      if (e.name === 'CastError') {
+        const err = new BadRequestError('Incorrect data was transmitted');
+        next(err);
+      }
+      next(e);
     });
 };
 
@@ -70,15 +69,14 @@ const likeCard = (req, res, next) => {
         const err = new NotFoundError('The requested information was not found');
         next(err);
         return;
-      } res.status(statusCodeOK).send(updateCard);
+      } res.status(HTTP_STATUS_OK).send(updateCard);
     })
     .catch((e) => {
       if (e.name === 'CastError') {
         const err = new BadRequestError('Incorrect data was transmitted');
         next(err);
       }
-      const err = new ServerError('Server Error');
-      next(err);
+      next(e);
     });
 };
 
@@ -93,15 +91,14 @@ const unlikeCard = (req, res, next) => {
         const err = new NotFoundError('The requested information was not found');
         next(err);
         return;
-      } res.status(statusCodeOK).send(updateCard);
+      } res.status(HTTP_STATUS_OK).send(updateCard);
     })
     .catch((e) => {
       if (e.name === 'CastError') {
         const err = new BadRequestError('Incorrect data was transmitted');
         next(err);
       }
-      const err = new ServerError('Server Error');
-      next(err);
+      next(e);
     });
 };
 
