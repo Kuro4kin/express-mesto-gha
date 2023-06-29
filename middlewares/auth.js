@@ -1,16 +1,18 @@
 const jwt = require('jsonwebtoken');
-const { statusCodeUnauthorized } = require('../constants/statusCodeConstatns');
+const UnauthorizedError = require('../errors/unauthorized-error');
 
 const auth = (req, res, next) => {
   const token = req.cookies.jwt;
   if (!token) {
-    res.status(statusCodeUnauthorized).send({ message: 'Authorization required' });
+    const err = new UnauthorizedError('Authorization required');
+    next(err);
   }
   let payload;
   try {
     payload = jwt.verify(token, 'verysecretword');
-  } catch (err) {
-    return res.status(statusCodeUnauthorized).send({ message: 'Authorization required' });
+  } catch (e) {
+    const err = new UnauthorizedError('Authorization required');
+    next(err);
   }
   req.user = payload;
   next();
