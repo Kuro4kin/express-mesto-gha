@@ -69,7 +69,7 @@ const createUser = (req, res, next) => {
         .then((newUser) => res.status(HTTP_STATUS_CREATED).send(newUser))
         .catch((e) => {
           if (e.code === 11000) {
-            const err = new ConflictError('User with this email has already been created')
+            const err = new ConflictError('User with this email has already been created');
             next(err);
             return;
           }
@@ -106,8 +106,7 @@ const updateUserAvatar = (req, res, next) => {
     .then((updateUser) => {
       if (!updateUser) {
         const err = new NotFoundError('The requested information was not found');
-        next(err);
-        return;
+        return next(err);
       }
       return res.status(HTTP_STATUS_OK).send(updateUser);
     })
