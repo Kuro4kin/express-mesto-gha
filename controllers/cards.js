@@ -53,6 +53,7 @@ const removeCard = (req, res, next) => {
       if (e.name === 'CastError') {
         const err = new BadRequestError('Incorrect data was transmitted');
         next(err);
+        return;
       }
       next(e);
     });

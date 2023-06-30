@@ -68,15 +68,12 @@ const createUser = (req, res, next) => {
       })
         .then((newUser) => res.status(HTTP_STATUS_CREATED).send(newUser))
         .catch((e) => {
-          if (e.name === 'ValidationError') {
-            const err = new BadRequestError('Incorrect data was transmitted');
+          if (e.code === 11000) {
+            const err = new ConflictError('User with this email has already been created')
             next(err);
-          } else if (e.code === 11000) {
-            const err = new ConflictError('User with this email has already been created');
-            next(err);
-          } else {
-            next(e);
+            return;
           }
+          next(e);
         });
     });
 };
@@ -88,7 +85,7 @@ const updateUserInfo = (req, res, next) => {
     .then((updateUser) => {
       if (!updateUser) {
         const err = new NotFoundError('The requested information was not found');
-        next(err);
+        return next(err);
       }
       return res.status(HTTP_STATUS_OK).send(updateUser);
     })
@@ -96,9 +93,9 @@ const updateUserInfo = (req, res, next) => {
       if (e.name === 'ValidationError') {
         const err = new BadRequestError('Incorrect data was transmitted');
         next(err);
-      } else {
-        next(e);
+        return;
       }
+      next(e);
     });
 };
 
@@ -110,6 +107,7 @@ const updateUserAvatar = (req, res, next) => {
       if (!updateUser) {
         const err = new NotFoundError('The requested information was not found');
         next(err);
+        return;
       }
       return res.status(HTTP_STATUS_OK).send(updateUser);
     })
@@ -117,9 +115,9 @@ const updateUserAvatar = (req, res, next) => {
       if (e.name === 'ValidationError') {
         const err = new BadRequestError('Incorrect data was transmitted');
         next(err);
-      } else {
-        next(e);
+        return;
       }
+      next(e);
     });
 };
 
